@@ -75,11 +75,11 @@ export class AddclientComponent implements OnInit {
         addClient(){
         let forAnswer = {answer: ''};
         this.http.post('http://localhost:3000/addclient', this.client).
-            subscribe((data:string) => forAnswer.answer=data);
-        //this.onUpload();
-        this.cookieService.set("user", forAnswer.answer);
-        this.cookieService.set("status", "client");
-        this.router.navigate(['/'], {});
+            subscribe((data:string) => {forAnswer.answer=data;
+                this.cookieService.set("user", forAnswer.answer);
+                this.cookieService.set("status", "client");
+                this.router.navigate(['/'], {});
+            });
     }
 
     

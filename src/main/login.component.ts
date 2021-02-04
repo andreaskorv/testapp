@@ -48,8 +48,22 @@ export class LoginComponent implements OnInit {
 
     login()
     {
-        this.http.post("http://localhost:3000/login_key", []).subscribe((res:string) => this.key=res);
-        alert(this.key);
+        this.http.post("http://localhost:3000/login_key", []).subscribe((res:string) => {
+            this.key=res;
+            var forSend = sha256(this.key + this.flogin.concat(this.fpassword));
+            this.http.post("http://localhost:3000/login", {"result": forSend}).subscribe((res:User) => {
+                this.user=res;
+                if (this.user.id != -1)
+                {
+                    this.cookieService.set("user", this.user.id.toString());
+                    this.cookieService.set("status", this.user.status);
+                    this.router.navigate(['/'], {});
+                }
+                else
+                {
+                    alert("Ошибка логина или пароля");
+                }
+        });
+    });   
     }
-    
 }
